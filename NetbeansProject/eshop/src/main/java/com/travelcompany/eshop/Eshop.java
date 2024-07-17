@@ -1,6 +1,6 @@
 package com.travelcompany.eshop;
 
-import service.TicketService;
+import com.travelcompany.eshop.service.TicketService;
 
 public class Eshop {
 
