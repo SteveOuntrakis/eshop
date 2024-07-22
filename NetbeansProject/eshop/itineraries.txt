@@ -1,0 +1,9 @@
+id=1, departureAirportCode=ATH, destinationAirportCode=PAR, departureDate=Sun Jul 21 12:50:04 EEST 2024, Airline=SkyLines, price=300
+id=2, departureAirportCode=ATH, destinationAirportCode=LON, departureDate=Sun Jul 21 12:50:04 EEST 2024, Airline=SkyLines, price=420
+id=3, departureAirportCode=ATH, destinationAirportCode=AMS, departureDate=Sun Jul 21 12:50:04 EEST 2024, Airline=SkyLines, price=280
+id=4, departureAirportCode=ATH, destinationAirportCode=PAR, departureDate=Sun Jul 21 12:50:04 EEST 2024, Airline=SkyLines, price=310
+id=5, departureAirportCode=ATH, destinationAirportCode=DUB, departureDate=Sun Jul 21 12:50:04 EEST 2024, Airline=SkyLines, price=880
+id=6, departureAirportCode=ATH, destinationAirportCode=FRA, departureDate=Sun Jul 21 12:50:04 EEST 2024, Airline=SkyLines, price=380
+id=7, departureAirportCode=ATH, destinationAirportCode=FRA, departureDate=Sun Jul 21 12:50:04 EEST 2024, Airline=SkyLines, price=350
+id=8, departureAirportCode=ATH, destinationAirportCode=MEX, departureDate=Sun Jul 21 12:50:04 EEST 2024, Airline=SkyLines, price=1020
+id=9, departureAirportCode=ATH, destinationAirportCode=DUB, departureDate=Sun Jul 21 12:50:04 EEST 2024, Airline=SkyLines, price=770

@@ -1,5 +1,7 @@
 package com.travelcompany.eshop.model;
 
+import com.travelcompany.eshop.model.enums.CustomerCategory;
+
 public class Customer {
 
     private int id;
@@ -11,8 +13,17 @@ public class Customer {
 
     public Customer() {
     }
-    
 
+    public Customer(int id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
+    public Customer(int id) {
+        this.id = id;
+    }
+    
     public Customer(int id, String name, String email, CustomerCategory category) {
         this.id = id;
         this.name = name;
@@ -79,7 +90,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{" + "id=" + id + ", name=" + name + ", email=" + email + ", address=" + address + ", nationality=" + nationality + ", category=" + category + '}';
+        return "id=" + id + ", name=" + name + ", email=" + email + ", address=" + address + ", nationality=" + nationality + ", category=" + category;
     }
 
 }

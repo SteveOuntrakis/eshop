@@ -1,4 +1,4 @@
-package com.travelcompany.eshop.model;
+package com.travelcompany.eshop.model.enums;
 
 import java.math.BigDecimal;
 
