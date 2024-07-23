@@ -1,4 +1,4 @@
-package com.travelcompany.eshop.service;
+package com.travelcompany.eshop.util;
 
 import com.travelcompany.eshop.model.Customer;
 import com.travelcompany.eshop.model.Itinerary;
@@ -12,13 +12,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DataManagementService<T> {
+public interface DataManagement<T> {
 
-    public void saveData(String outFilename, List<T> t) throws IOException {
+    default void saveData(String outFilename, List<T> t) throws IOException {
         PrintWriter pw = new PrintWriter(new FileOutputStream(new File(outFilename)));
         for (T e : t) {
             pw.write(e.toString() + "\n");
@@ -26,7 +28,7 @@ public class DataManagementService<T> {
         pw.close();
     }
 
-    public List<T> loadDataFromFile(String filename,T t) throws FileNotFoundException, IOException {
+    default List<T> loadDataFromFile(String filename,T t) throws FileNotFoundException, IOException, ParseException {
         List<T> list = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader(filename));
         String line;
@@ -41,7 +43,7 @@ public class DataManagementService<T> {
         return list;
     }
 
-    private Customer parseCustomer(String line) {
+    default Customer parseCustomer(String line) {
         String[] parts = line.split(", ");
         int id = Integer.parseInt(parts[0].split("=")[1]);
         String name = parts[1].split("=")[1];
@@ -52,14 +54,13 @@ public class DataManagementService<T> {
         return new Customer(id, name, email, address, nationality, category);
     }
 
-    private Itinerary parseItinerary(String line) {
+    default Itinerary parseItinerary(String line) throws ParseException {
         String[] parts = line.split(", ");
         int id = Integer.parseInt(parts[0].split("=")[1]);
         AirportCode departureCode = AirportCode.valueOf(parts[1].split("=")[1]);
-        AirportCode destinationCode = AirportCode.valueOf(parts[2].split("=")[1]);
-        //Date date = (parts[3].split("=")[1]);
-        //String airline = parts[4].split("=")[1];
+        AirportCode destinationCode = AirportCode.valueOf(parts[2].split("=")[1]);       
+        String date = parts[3].split("=")[1];      
         BigDecimal cost = new BigDecimal(parts[5].split("=")[1]);
-        return new Itinerary(id, departureCode, destinationCode, cost);
+        return new Itinerary(id, departureCode, destinationCode,date, cost);
     }
 }
