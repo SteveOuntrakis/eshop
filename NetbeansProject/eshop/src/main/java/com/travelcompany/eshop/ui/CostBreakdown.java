@@ -33,17 +33,15 @@ public class CostBreakdown {
             }
         } while (true);
         return payment_method_discount;
-
     }
 
-    public void calculatingPayment(Customer customer, Itinerary itineraries, BigDecimal payment_method_discount) {
-        System.out.println("-----------------------------------------------------------------------------------");
+    public BigDecimal calculatingPayment(Customer customer, Itinerary itineraries, BigDecimal payment_method_discount) {
         var total_discount = payment_method_discount.add(customer.getCategory().getDiscount());
         var cost = itineraries.getPrice()
                 .subtract(itineraries.getPrice()
                         .multiply(total_discount))
                 .setScale(2, RoundingMode.HALF_UP);
-        System.out.println(cost);
+        return cost;
     }
 
 }

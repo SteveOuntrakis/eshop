@@ -18,8 +18,8 @@ public class DestinationChoosing implements DataManagement<Itinerary> {
     public static final String DELIMITER ="-------------------------------------";
     
     public Itinerary chosenDestination () throws IOException, FileNotFoundException, ParseException{
-        System.out.println( DELIMITER+"\nThese are your destinations : \n" +DELIMITER);
-        List<Itinerary> itineraries = loadDataFromFile("itineraries.txt", new Itinerary());
+        System.out.println("These are your destinations : \n" +DELIMITER);
+        List<Itinerary> itineraries = loadDataFromFile("itineraries.txt",DataManagement:: parseItinerary);
         Set<Itinerary> idSet = new HashSet<>();
 
         Set<String> countries = itineraries
@@ -47,20 +47,19 @@ public class DestinationChoosing implements DataManagement<Itinerary> {
             }
         }
         while (true) {
-            System.out.println("Please choose the Id of your destination to reserve your tickets : ");
-            while (!scanner.hasNextInt()) {
-                System.out.println("Please choose a number for the Id : ");
+            System.out.println(DELIMITER+"\nPlease choose the Id of your destination to reserve your tickets : ");
+            while (!scanner.hasNextInt()) {  
                 scanner.next();
+                System.out.println("Please choose a number for the Id : ");                
             }
             int destID = scanner.nextInt();
+            System.out.println(idSet.toString());
             for (Itinerary itinerary : idSet) {
                 if (itinerary.getId() == destID) {                    
                     return itinerary;
                 }
             }
-            break;
         }
-        return null;
     }
 
 }

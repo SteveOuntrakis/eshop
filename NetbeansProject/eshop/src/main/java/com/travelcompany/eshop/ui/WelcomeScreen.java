@@ -11,11 +11,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class WelcomeScreen implements DataManagement<Customer> {
+    public static final String DELIMITER ="------------------------------------------------------------------------------------------------------";
 
     Scanner scanner = new Scanner(System.in);
     public Customer WelcomeScreen() throws IOException, FileNotFoundException, ParseException {
-        List<Customer> loadedCustomers = loadDataFromFile("customers.txt", new Customer());
-        System.out.println("Welcome to TravelCompany. Press 1 for validate, 2 for adding you in our system or 0 for exit :");
+        List<Customer> loadedCustomers = loadDataFromFile("customers.txt", DataManagement::parseCustomer);
+        System.out.println(DELIMITER+"\nWelcome to TravelCompany. Press 1 for validate, 2 for adding you in our system or 0 for exit :");
         while (!scanner.hasNextInt()) {
             scanner.next();
         }
@@ -26,17 +27,23 @@ public final class WelcomeScreen implements DataManagement<Customer> {
                         .stream()
                         .map(Customer::getEmail)
                         .collect(Collectors.toSet());
-                while (true) {
-                    System.out.println("Please provide us the email for validation");
-                    String email = scanner.next();
+                
+                
+                while (true) {                    
+                    String email = scanner.nextLine();
+                    System.out.println("Please provide us the email for validation or press 0 for exit.");
                     if (customerEmails.contains(email)) {
                         for ( Customer customer : loadedCustomers){
                             if(customer.getEmail().equals(email))
+                                System.out.println(DELIMITER+"\nHello "+customer.getName() );
                                 return customer;
                         }
                         break;
                     }
-                }
+                    else if(email.equals("0")){
+                        System.exit(Integer.parseInt(email));
+                    }                                     
+                }                
                 break;
             case 2:
                 int lastId = 0;
