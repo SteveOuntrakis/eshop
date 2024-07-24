@@ -31,7 +31,7 @@ public final class OrderedTicketsImportData implements DataManagement {
         addToList(orderedTickets, 9, 0, 2, PaymentMethod.CASH);
         saveData("orderedTickets.txt", orderedTickets);
     }
-
+    // included the wrong itinerary id input and handle it. 
     public void addToList(List<OrderedTickets> orderedTickets, int id, int customerId, int itineraryId, PaymentMethod paymentMethod) {
         try {
             Customer customer = loadedCustomers.get(customerId);
