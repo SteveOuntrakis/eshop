@@ -16,13 +16,12 @@ public class Itinerary {
     private AirportCode destinationAirportCode;
     private String departureDate;
     private final String Airline = "SkyLines";
+    private int numberOfSeats;
     private BigDecimal price;
 
     @Override
     public String toString() {
-        return "id=" + id + ", departureAirportCode=" + departureAirportCode + ", destinationAirportCode=" + destinationAirportCode + ", departureDate=" + departureDate + ", Airline=" + Airline + ", price=" + price;
+        return "id=" + id + ", departureAirportCode=" + departureAirportCode + ", destinationAirportCode=" + destinationAirportCode + ", departureDate=" + departureDate + ", Airline=" + Airline + ", tickets=" + numberOfSeats + ", price=" + price;
     }
-    
-
 
 }

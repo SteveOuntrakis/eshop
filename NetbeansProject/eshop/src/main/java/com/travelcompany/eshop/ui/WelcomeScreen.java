@@ -1,5 +1,6 @@
 package com.travelcompany.eshop.ui;
 
+import com.travelcompany.eshop.exception.InvalidEmailException;
 import com.travelcompany.eshop.model.Customer;
 import com.travelcompany.eshop.model.enums.CustomerCategory;
 import com.travelcompany.eshop.util.DataManagement;
@@ -17,7 +18,7 @@ public final class WelcomeScreen implements DataManagement<Customer> {
     Scanner scanner = new Scanner(System.in);
 
     public Customer WelcomeScreen() throws IOException, FileNotFoundException, ParseException {
-        List<Customer> customers = loadDataFromFile("customers.txt", DataManagement::parseCustomer);
+        List<Customer> customers = loadDataFromFile(Finals.CUSTOMER_FILE_PATH, DataManagement::parseCustomer);
         int login = -1;
         while (login != 0 & login != 1 & login != 2) {
             System.out.println(Finals.DELIMITER + "\nPress 1 for validate, 2 for adding you in our system or 0 for exit :");
@@ -53,7 +54,7 @@ public final class WelcomeScreen implements DataManagement<Customer> {
                     if (customer.getEmail().equals(email)) {
                         System.out.println(Finals.DELIMITER + "\nHello " + customer.getName());
                         return customer;
-                    }                    
+                    }
                 }
                 break;
             } else if (email.equals("0")) {
@@ -68,7 +69,7 @@ public final class WelcomeScreen implements DataManagement<Customer> {
         for (Customer cust : customers) {
             lastId = cust.getId();
         }
-        Customer customer = new Customer(lastId+1);
+        Customer customer = new Customer(lastId + 1);
         System.out.println("Please add your details.. \nWhat is your name? :");
         String myName;
         while (true) {
@@ -90,8 +91,12 @@ public final class WelcomeScreen implements DataManagement<Customer> {
         System.out.println("Please insert your email: ");
         String myEmail = scanner.next();
         while (!myEmail.endsWith("@travelcompany.com")) {
-            System.out.println("Your email should end with '@travelcompany.com'... ");
-            myEmail = scanner.next();
+            try {
+                myEmail = scanner.nextLine();
+                throw new InvalidEmailException("Your email should end with '@travelcompany.com'... ");
+            } catch (InvalidEmailException e) {
+                System.out.println(e.getMessage());
+            }
         }
         customer.setEmail(myEmail);
         System.out.println("Please add your address : ");
@@ -100,7 +105,7 @@ public final class WelcomeScreen implements DataManagement<Customer> {
         customer.setNationality(scanner.next());
         customer.setCategory(CustomerCategory.INDIVIDUAL);
         customers.add(customer);
-        saveData("customers.txt", customers);
+        saveData(Finals.CUSTOMER_FILE_PATH, customers);
         return customer;
     }
 }

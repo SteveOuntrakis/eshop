@@ -2,7 +2,8 @@ package com.travelcompany.eshop.util;
 
 import com.travelcompany.eshop.model.Customer;
 import com.travelcompany.eshop.model.Itinerary;
-import com.travelcompany.eshop.model.OrderedTickets;
+import com.travelcompany.eshop.model.OrderedTicket;
+import com.travelcompany.eshop.model.PurchasingTimestamp;
 import com.travelcompany.eshop.model.enums.AirportCode;
 import com.travelcompany.eshop.model.enums.CustomerCategory;
 import com.travelcompany.eshop.model.enums.PaymentMethod;
@@ -56,17 +57,28 @@ public interface DataManagement<T> {
         AirportCode departureCode = AirportCode.valueOf(parts[1].split("=")[1]);
         AirportCode destinationCode = AirportCode.valueOf(parts[2].split("=")[1]);
         String date = parts[3].split("=")[1];
-        BigDecimal cost = new BigDecimal(parts[5].split("=")[1]);
-        return new Itinerary(id, departureCode, destinationCode, date, cost);
+        int ticketNumber = Integer.parseInt(parts[5].split("=")[1]);
+        BigDecimal cost = new BigDecimal(parts[6].split("=")[1]);
+        return new Itinerary(id, departureCode, destinationCode, date,ticketNumber, cost);
     }
 
-    static OrderedTickets parseOrderedTickets(String line) throws ParseException {
+    static OrderedTicket parseOrderedTickets(String line) throws ParseException {
         String[] parts = line.split(", ");
         int id = Integer.parseInt(parts[0].split("=")[1]);
         int customerId = Integer.parseInt(parts[1].split("=")[1]);
         int itineraryId = Integer.parseInt(parts[2].split("=")[1]);
         PaymentMethod paymentMethod = PaymentMethod.valueOf(parts[3].split("=")[1]);
         BigDecimal cost = new BigDecimal(parts[4].split("=")[1]);
-        return new OrderedTickets(id, customerId, itineraryId, paymentMethod, cost);
+        return new OrderedTicket(id, customerId, itineraryId, paymentMethod, cost);
+    }
+
+    static PurchasingTimestamp parsePurchasingTimestamp(String line) throws ParseException {
+        String[] parts = line.split(", ");
+        int customerId = Integer.parseInt(parts[0].split("=")[1]);
+        int itineraryId = Integer.parseInt(parts[1].split("=")[1]);
+        String departureDate = parts[2].split("=")[1];
+        String purchasingDate = parts[3].split("=")[1];
+
+        return new PurchasingTimestamp(customerId, itineraryId, departureDate, purchasingDate);
     }
 }

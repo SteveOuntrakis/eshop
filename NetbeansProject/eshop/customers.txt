@@ -7,4 +7,4 @@ id=6, name=Mario Conti, email=mconti@mail.com, address=Rome, nationality=Italian
 id=7, name=Nathan Martin, email=nmartin@mail.com, address=Lyon, nationality=French, category=BUSINESS
 id=8, name=Enzo Collin, email=ecollin@mail.com, address=Lyon, nationality=French, category=INDIVIDUAL
 id=9, name=Frederic Michel, email=fmichel@mail.com, address=Athens, nationality=French, category=INDIVIDUAL
-id=10, name=Stefanos, email=stefanos@travelcompany.com, address=Chania, nationality=Greece, category=INDIVIDUAL
+id=10, name=Stefanos, email=stef@travelcompany.com, address=Chania, nationality=Greek, category=INDIVIDUAL

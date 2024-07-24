@@ -2,9 +2,10 @@ package com.travelcompany.eshop.service;
 
 import com.travelcompany.eshop.model.Customer;
 import com.travelcompany.eshop.model.Itinerary;
-import com.travelcompany.eshop.model.OrderedTickets;
+import com.travelcompany.eshop.model.OrderedTicket;
 import com.travelcompany.eshop.model.enums.AirportCode;
 import com.travelcompany.eshop.util.DataManagement;
+import com.travelcompany.eshop.util.Finals;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,13 +17,13 @@ import java.util.stream.Collectors;
 public class ReportingService implements DataManagement {
 
     private List<Customer> customers;
-    private List<OrderedTickets> orderedTickets;
+    private List<OrderedTicket> orderedTickets;
     private List<Itinerary> itineraries;
 
     public ReportingService() throws IOException, FileNotFoundException, ParseException {
-        customers = loadDataFromFile("customers.txt", DataManagement::parseCustomer);
-        orderedTickets = loadDataFromFile("orderedTickets.txt", DataManagement::parseOrderedTickets);
-        itineraries = loadDataFromFile("itineraries.txt", DataManagement::parseItinerary);
+        customers = loadDataFromFile(Finals.CUSTOMER_FILE_PATH, DataManagement::parseCustomer);
+        orderedTickets = loadDataFromFile(Finals.ORDERED_TICKET_PATH, DataManagement::parseOrderedTickets);
+        itineraries = loadDataFromFile(Finals.ITINERARY_FILE_PATH, DataManagement::parseItinerary);
     }
 
     public void firstQuestion() {
@@ -40,7 +41,7 @@ public class ReportingService implements DataManagement {
 
             BigDecimal totalCost = orderedTickets.stream()
                     .filter(ticket -> ticket.getCustomerId() == customer.getId())
-                    .map(OrderedTickets::getPaymentAmount)
+                    .map(OrderedTicket::getPaymentAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
             totalTicketsList.add(ticketCount);
@@ -94,35 +95,46 @@ public class ReportingService implements DataManagement {
 
     public void thirdQuestion() {
         System.out.println("List of the customers with the most tickets and with the largest cost of purchases ");
-        Customer maxTicketsCustomer = null;
+        List<Customer> maxTicketsCustomers = new ArrayList<>();
+        List<Customer> maxCostCustomers = new ArrayList<>();
         int maxTickets = 0;
-
-        Customer maxCostCustomer = null;
         BigDecimal maxCost = BigDecimal.ZERO;
 
         for (Customer customer : customers) {
-            int ticketCount = (int) orderedTickets.stream()
-                    .filter(ticket -> ticket.getCustomerId() == customer.getId())
-                    .count();
+            int ticketCount = 0;
+            BigDecimal totalCost = BigDecimal.ZERO;
 
-            BigDecimal totalCost = orderedTickets.stream()
-                    .filter(ticket -> ticket.getCustomerId() == customer.getId())
-                    .map(OrderedTickets::getPaymentAmount)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            for (OrderedTicket ticket : orderedTickets) {
+                if (ticket.getCustomerId() == customer.getId()) {
+                    ticketCount++;
+                    totalCost = totalCost.add(ticket.getPaymentAmount());
+                }
+            }
 
             if (ticketCount > maxTickets) {
                 maxTickets = ticketCount;
-                maxTicketsCustomer = customer;
+                maxTicketsCustomers= new ArrayList<>();
+                maxTicketsCustomers.add(customer);
+            } else if (ticketCount == maxTickets) {
+                maxTicketsCustomers.add(customer);
             }
 
             if (totalCost.compareTo(maxCost) > 0) {
                 maxCost = totalCost;
-                maxCostCustomer = customer;
+                maxCostCustomers.clear();
+                maxCostCustomers.add(customer);
+            } else if (totalCost.compareTo(maxCost) == 0) {
+                maxCostCustomers.add(customer);
             }
         }
-
-        System.out.println("Customer with the most tickets: " + (maxTicketsCustomer != null ? maxTicketsCustomer.getName() + " (" + maxTickets + " tickets)" : "None"));
-        System.out.println("Customer with the largest cost of purchases: " + (maxCostCustomer != null ? maxCostCustomer.getName() + " (" + maxCost + ")" : "None"));
+        System.out.println("Customers with the most tickets (" + maxTickets + " tickets):");
+        for (Customer customer : maxTicketsCustomers) {
+            System.out.println(" - " + customer.getName());
+        }
+        System.out.println("Customers with the largest cost of purchases (" + maxCost + "):");
+        for (Customer customer : maxCostCustomers) {
+            System.out.println(" - " + customer.getName());
+        }
     }
 
     public void fourthQuestion() {
@@ -132,7 +144,7 @@ public class ReportingService implements DataManagement {
                 .stream()
                 .filter(c -> orderedTickets.stream().noneMatch(t -> t.getCustomerId() == c.getId()))
                 .collect(Collectors.toList());
-        customerWithoutTickets.forEach(c -> System.out.println(c.getName()));     
+        customerWithoutTickets.forEach(c -> System.out.println(c.getName()));
 
     }
 

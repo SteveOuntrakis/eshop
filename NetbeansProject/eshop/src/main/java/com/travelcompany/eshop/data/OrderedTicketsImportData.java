@@ -1,13 +1,18 @@
 package com.travelcompany.eshop.data;
 
+import com.travelcompany.eshop.exception.CustomerNotFoundException;
+import com.travelcompany.eshop.exception.ItineraryNotFoundException;
 import com.travelcompany.eshop.model.Customer;
 import com.travelcompany.eshop.model.Itinerary;
-import com.travelcompany.eshop.model.OrderedTickets;
+import com.travelcompany.eshop.model.OrderedTicket;
 import com.travelcompany.eshop.model.enums.PaymentMethod;
 import com.travelcompany.eshop.ui.CostBreakdown;
 import com.travelcompany.eshop.util.DataManagement;
+import com.travelcompany.eshop.util.Finals;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,31 +20,52 @@ import java.util.List;
 public final class OrderedTicketsImportData implements DataManagement {
 
     CostBreakdown costBreakdown = new CostBreakdown();
-    List<Customer> loadedCustomers = loadDataFromFile("customers.txt", DataManagement::parseCustomer);
-    List<Itinerary> itineraries = loadDataFromFile("itineraries.txt", DataManagement::parseItinerary);
+    List<Customer> loadedCustomers = loadDataFromFile(Finals.CUSTOMER_FILE_PATH, DataManagement::parseCustomer);
+    List<Itinerary> itineraries = loadDataFromFile(Finals.ITINERARY_FILE_PATH, DataManagement::parseItinerary);
 
     public OrderedTicketsImportData() throws IOException, FileNotFoundException, ParseException {
-        List<OrderedTickets> orderedTickets = new ArrayList<>();
-        addToList(orderedTickets, 1, 0, 1, PaymentMethod.CASH);
-        addToList(orderedTickets, 2, 1, 2, PaymentMethod.CASH);
-        addToList(orderedTickets, 3, 2, 2, PaymentMethod.CREDIT_CARD);
-        addToList(orderedTickets, 4, 1, 3, PaymentMethod.CREDIT_CARD);
-        addToList(orderedTickets, 5, 2, 3, PaymentMethod.CASH);
-        addToList(orderedTickets, 6, 3, 6, PaymentMethod.CREDIT_CARD);
-        addToList(orderedTickets, 7, 4, 6, PaymentMethod.CREDIT_CARD);
-        addToList(orderedTickets, 8, 1, 9, PaymentMethod.CASH);
-        addToList(orderedTickets, 9, 0, 2, PaymentMethod.CASH);
-        saveData("orderedTickets.txt", orderedTickets);
-    }
-    // included the wrong itinerary id input and handle it. 
-    public void addToList(List<OrderedTickets> orderedTickets, int id, int customerId, int itineraryId, PaymentMethod paymentMethod) {
-        try {
-            Customer customer = loadedCustomers.get(customerId);
-            Itinerary itinerary = itineraries.get(itineraryId);
-            orderedTickets.add(new OrderedTickets(id, customerId, itineraryId, paymentMethod, costBreakdown.calculatingPayment(customer, itinerary, paymentMethod.getDiscount())));
-        } catch (Exception e) {
-            System.out.println("Exception : " + e.getMessage() + " . The record wasn't added.");
+        if (Files.notExists(Paths.get(Finals.ORDERED_TICKET_PATH))) {
+            List<OrderedTicket> orderedTickets = new ArrayList<>();
+            addToList(orderedTickets, 1, 1, 2, PaymentMethod.CASH);
+            addToList(orderedTickets, 2, 2, 3, PaymentMethod.CASH);
+            addToList(orderedTickets, 3, 3, 3, PaymentMethod.CREDIT_CARD);
+            addToList(orderedTickets, 4, 2, 4, PaymentMethod.CREDIT_CARD);
+            addToList(orderedTickets, 5, 3, 4, PaymentMethod.CASH);
+            addToList(orderedTickets, 6, 4, 7, PaymentMethod.CREDIT_CARD);
+            addToList(orderedTickets, 7, 5, 7, PaymentMethod.CREDIT_CARD);
+            addToList(orderedTickets, 8, 2, 10, PaymentMethod.CASH);
+            addToList(orderedTickets, 9, 1, 3, PaymentMethod.CASH);
+            saveData(Finals.ORDERED_TICKET_PATH, orderedTickets);
         }
+    }
+
+    // included the wrong itinerary id input and handle it. 
+    public void addToList(List<OrderedTicket> orderedTickets, int id, int customerId, int itineraryId, PaymentMethod paymentMethod) {
+        Customer customer = null;
+        Itinerary itinerary = null;
+        try {
+            if (customerId > 0 && customerId <= loadedCustomers.size()) {
+                customer = loadedCustomers.get(customerId - 1);
+            }
+            if (customer == null) {
+                throw new CustomerNotFoundException("Customer ID " + customerId + " wasn't found. Skipping this entry.");
+            }
+        } catch (CustomerNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            if (itineraryId > 0 && itineraryId <= itineraries.size()) {
+                itinerary = itineraries.get(itineraryId - 1);
+            }
+            if (itinerary == null) {
+                throw new ItineraryNotFoundException("Itinerary ID " + itineraryId + " wasn't found. Skipping this entry.");
+            }
+        } catch (ItineraryNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+        orderedTickets.add(new OrderedTicket(id, customerId, itineraryId, paymentMethod, costBreakdown.calculatingPayment(customer, itinerary, paymentMethod.getDiscount())));
 
     }
 

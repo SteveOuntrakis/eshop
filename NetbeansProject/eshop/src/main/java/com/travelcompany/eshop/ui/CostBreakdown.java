@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Scanner;
 
-public class CostBreakdown {    
+public class CostBreakdown {
 
     public BigDecimal paymentMethod() {
         Scanner scanner = new Scanner(System.in);
@@ -41,8 +41,7 @@ public class CostBreakdown {
         var cost = itineraries.getPrice()
                 .subtract(itineraries.getPrice()
                         .multiply(total_discount))
-                .setScale(2, RoundingMode.HALF_UP);
-        System.out.println("The final Price is: "+cost);
+                .setScale(2, RoundingMode.HALF_UP);        
         return cost;
     }
 

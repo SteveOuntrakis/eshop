@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderedTickets {
+public class OrderedTicket {
+
     private int id;
     private int customerId;
     private int itineraryId;
@@ -20,6 +21,5 @@ public class OrderedTickets {
     public String toString() {
         return "id=" + id + ", customerId=" + customerId + ", itineraryId=" + itineraryId + ", paymentMethod=" + paymentMethod + ", paymentAmount=" + paymentAmount;
     }
-    
 
 }

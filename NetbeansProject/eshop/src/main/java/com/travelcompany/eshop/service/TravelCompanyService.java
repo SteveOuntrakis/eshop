@@ -1,5 +1,8 @@
 package com.travelcompany.eshop.service;
 
+import com.travelcompany.eshop.data.CustomerImportData;
+import com.travelcompany.eshop.data.ItineraryImportData;
+import com.travelcompany.eshop.data.OrderedTicketsImportData;
 import com.travelcompany.eshop.model.Customer;
 import com.travelcompany.eshop.model.Itinerary;
 import com.travelcompany.eshop.ui.CostBreakdown;
@@ -7,23 +10,18 @@ import com.travelcompany.eshop.ui.DestinationChoosing;
 import com.travelcompany.eshop.ui.OrderingTicket;
 import com.travelcompany.eshop.ui.WelcomeScreen;
 import com.travelcompany.eshop.util.Finals;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.Scanner;
 
 public class TravelCompanyService {
 
-    public TravelCompanyService() throws IOException, FileNotFoundException, ParseException {
-        /*        3 classes for importing data. 
-          We don't need them right now, so they became comments.
-          You may uncomment and test them, but we will lose the additionally added Customers and OrderedTickets.
+    public TravelCompanyService() throws Exception {
+        /*        3 classes for importing data.
+           If the .txt files are already created , then we skip the creation part.
          */
-//        new CustomerImportData();
-//        new ItineraryImportData();
-//        new OrderedTicketsImportData();    
-
+        new CustomerImportData();
+        new ItineraryImportData();
+        new OrderedTicketsImportData();
         //Reporting Service is where i answer the questions in 6. Reporting.
         ReportingService reportingService = new ReportingService();
         //CostBreakdown is the class where i add all discounts(if any) and i return the final result.
@@ -58,7 +56,8 @@ public class TravelCompanyService {
                 Itinerary itinerary = new DestinationChoosing().chosenDestination();
                 BigDecimal paymentdiscount = costBreakdown.paymentMethod();
                 BigDecimal finalCost = costBreakdown.calculatingPayment(customer, itinerary, paymentdiscount);
-                new OrderingTicket(customer,itinerary,finalCost,paymentdiscount);
+                System.out.println(Finals.DELIMITER+"\nThe final Price is: " + finalCost + "\nThank you for choosing TravelCompany. Enjoy your flight! ");
+                new OrderingTicket(customer, itinerary, finalCost, paymentdiscount);
                 break;
             //If the user wants to leave.
             case 0:

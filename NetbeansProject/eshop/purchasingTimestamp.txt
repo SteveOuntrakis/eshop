@@ -1,0 +1,2 @@
+customer=10, itinerary=1, departureDate=22/02/2022 13:35, purchasingDate=2024-07-24
+customer=10, itinerary=1, departureDate=22/02/2022 13:35, purchasingDate=2024-07-24
